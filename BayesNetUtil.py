@@ -1,14 +1,3 @@
-#############################################################################
-# BayesNetUtil.py
-#
-# Implements functions to simplify the implementation of algorithms for
-# probabilistic inference with Bayesian networks.
-#
-# Version: 1.0, 06 October 2022
-# Version: 1.1, 08 October 2023 commented and extended to support loop detection
-# Contact: hcuayahuitl@lincoln.ac.uk
-#############################################################################
-
 import numpy as np
 import networkx as nx
 

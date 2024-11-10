@@ -1,20 +1,3 @@
-#############################################################################
-# BayesNetReader.py
-#
-# Reads a configuration file containing the specification of a Bayes net.
-# It generates a dictionary of key-value pairs containing information
-# describing the random variables, structure, and conditional probabilities.
-# This implementation aims to be agnostic of the data (no hardcoded vars/probs)
-#
-# Keys expected: name, random_variables, structure, and CPTs.
-# Separators: COLON(:) for key-values, EQUALS(=) for table_entry-probabilities
-# Example configuration file: see config_alarm.txt (from workshop of week 3)
-#
-# Version: 1.0
-# Date: 06 October 2022
-# Contact: hcuayahuitl@lincoln.ac.uk
-#############################################################################
-
 import sys
 
 

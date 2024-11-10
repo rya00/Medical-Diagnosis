@@ -1,36 +1,3 @@
-#############################################################################
-# BayesNetInference.py
-#
-# This program implements the algorithm "Inference by Enumeration", which
-# makes use of BayesNetsReader to facilitate reading data of a Bayes net via
-# the object self.bn created by the inherited class (BayesNetReader). It also
-# makes use of miscellaneous methods implemented in BayesNetUtil.
-# Its purpose is to answer probabilistic queries such as P(Y|X=true,Z=false).
-# This implementation is agnostic of the data and provides a general
-# implementation that can ne used across datasets by providing a config file.
-#
-# This program also implements the algorithm "Rejection Sampling", which
-# imports functionalities to facilitate reading data of a Bayes net via
-# the object self.bn created by the inherited class BayesNetReader.
-# Its purpose is to answer probabilistic queries such as P(Y|X=true,Z=false).
-# This implementation is agnostic of the data and provides a general
-# implementation that can be used across datasets by providing a config file.
-#
-# Whilst Inference by Enumeration has been tested with discrete and Gaussian
-# Bayes nets, Rejection Sampling has only been tested with discrete Bayes nets.
-#
-# WARNINGS:
-#    (1) This code has been revised with multiple cases but not thoroughly tested.
-#    (2) The execution time depends on the number of random samples.
-#
-# Version: 1.0, Date: 06 October 2022, 1st version of class BayesNetExactInference
-# Version: 1.1, Date: 07 October 2022, 1st version of class BayesNetApproxInference
-# Version: 1.2, Date: 21 October 2022, revised code to be more query compatible
-# Version: 1.3, Date: 20 October 2022, revised code made simpler (more intuitive)
-# Version: 1.4, Date: 13 October 2023, merged classes for unified prob. inference
-# Contact: hcuayahuitl@lincoln.ac.uk
-#############################################################################
-
 import sys
 import random
 import time

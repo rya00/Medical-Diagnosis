@@ -1,21 +1,3 @@
-#############################################################################
-# CPT_Generator.py
-#
-# This program generates Conditional Probability Tables (CPTs) into a config
-# file in order to be useful for probabilistic inference. It does that by
-# rewriting a given config file without CPTS. The new CPTs are derived from
-# the given data file (in CSV format) -- compatible with the config file.
-# This program assumes Laplacian smoothing (with l=1 to avoid 0 probabilities)
-#
-# Depending on the dataset and Bayes net structure, this r may take some
-# minutes instead of seconds to generate CPTs. So be patient when running it.
-#
-# WARNING: This code has not been thoroughly tested.
-#
-# Version: 1.0, Date: 08 October 2022, first version
-# Contact: hcuayahuitl@lincoln.ac.uk
-#############################################################################
-
 import sys
 from BayesNetReader import BayesNetReader
 from DataReader import CSV_DataReader
