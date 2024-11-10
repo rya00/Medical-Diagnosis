@@ -1,0 +1,10 @@
+# This config adds more specific interactions between variables like Hand and Age, with a focus on cognitive scores (MMSE, CDR) and neuroimaging features (eTIV, nWBV).
+# It models the relationship between Hand (presumably left or right hand) and other clinical measures, as well as neuroimaging metrics like nWBV (normalized brain volume).
+
+# Stuck in a loop
+
+name:nb-dementia-structure-2
+
+random_variables:Group(Group);Hand(Hand);Age(Age);MR_Delay(MR_Delay);MMSE(MMSE);CDR(CDR);SES(SES);EDUC(EDUC);eTIV(eTIV);nWBV(nWBV);ASF(ASF)
+
+structure:P(Group);P(Hand|Group,Age);P(Age|Group);P(MR_Delay|Hand,Age);P(MMSE|Age,Group,Hand);P(CDR|MMSE,Age,Group);P(SES|EDUC,Age);P(EDUC|Group,Age);P(eTIV|Group,MMSE,Age,Hand);P(nWBV|MMSE,Age,Group);P(ASF|nWBV,Age,Hand)

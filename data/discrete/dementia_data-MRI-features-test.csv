@@ -1,0 +1,3 @@
+name:dementia_bayesian_network
+random_variables:Subject_ID;MRI_ID;Group;Visit;MR_Delay;M/F;Hand;Age;EDUC;SES;MMSE;CDR;eTIV;nWBV;ASF
+structure:P(Group|Age, MMSE, CDR, EDUC, SES);P(MMSE|Age, eTIV);P(CDR|Age, MMSE);P(eTIV|Age, ASF);P(nWBV|eTIV);P(ASF|eTIV);P(Hand|M/F);P(SES|EDUC);P(Age|Group)

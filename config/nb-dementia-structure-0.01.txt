@@ -1,0 +1,15 @@
+# name: The name of this configuration is nb-mri-neuro-structure-0.01, which reflects the neuro analysis on MRI data.
+# random_variables: The key features from your dataset are included (e.g., Group, M_F, Visit, Hand, MR_Delay, Age, EDUC, etc.).
+# structure: This defines the conditional relationships:
+# P(Group) is a root variable with no conditions.
+# P(M_F|Group) indicates that gender (M_F) depends on the group (Group).
+# Similarly, other variables like Age, EDUC, and SES are conditioned on other relevant features (like Group and Age).
+# Complex dependencies like P(CDR|MMSE, Age, Group) represent relationships where CDR (clinical dementia rating) depends on MMSE and Age.
+
+# Stuck in a loop
+
+name:nb-dementia-structure-0.01
+
+random_variables:Group(Group);M_F(M_F);Visit(Visit);Hand(Hand);MR_Delay(MR_Delay);Age(Age);EDUC(EDUC);SES(SES);MMSE(MMSE);CDR(CDR);eTIV(eTIV);nWBV(nWBV);ASF(ASF)
+
+structure:P(Group);P(M_F|Group);P(Visit|Group,M_F);P(Hand|Group,Age,Visit);P(MR_Delay|Hand,Age);P(Age|Group);P(EDUC|Age,Group);P(SES|EDUC,Age,Group);P(MMSE|Age,Group,EDUC);P(CDR|MMSE,Age,Group);P(eTIV|Age,MMSE,Group,Hand);P(nWBV|Age,Group,MMSE);P(ASF|eTIV,Age,Group,Hand)
