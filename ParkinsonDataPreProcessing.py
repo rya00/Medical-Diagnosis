@@ -4,19 +4,29 @@ from sklearn.model_selection import train_test_split
 import os
 
 # Loading the Parkinson's dataset
-data = pd.read_excel(r'C:\Users\envy\Desktop\AI Coursework\data\parkinsons_data-VOICE-features.xlsx')
+data = pd.read_excel("data\parkinsons_data-VOICE-features.xlsx")
 
-# Defining the continuous columns
-continuous_columns = ['status']
-identifier_columns = ['name', 'MDVP:Fo(Hz)', 'MDVP:Fhi(Hz)', 'MDVP:Flo(Hz)', 'MDVP:Jitter(%)', 'MDVP:Jitter(Abs)', 'MDVP:RAP', 'MDVP:PPQ', 'Jitter:DDP', 'MDVP:Shimmer', 'MDVP:Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5', 'MDVP:APQ', 'Shimmer:DDA', 'NHR', 'HNR', 'RPDE', 'DFA', 'spread1', 'spread2', 'D2', 'PPE']
+# Function to rename columns
+def rename_columns(df):
+    return df.rename(columns=lambda x: x.replace(':', '_').replace('(', '_').replace(')', ''))
+
+# Renaming columns
+data = rename_columns(data)
+
+# Defining the columns
+identifier_columns = ['name']
+feature_columns = ['MDVP_Fo_Hz', 'MDVP_Fhi_Hz', 'MDVP_Flo_Hz', 'MDVP_Jitter_%', 'MDVP_Jitter_Abs', 'MDVP_RAP', 'MDVP_PPQ', 'Jitter_DDP', 'MDVP_Shimmer', 'MDVP_Shimmer_dB', 'Shimmer_APQ3', 'Shimmer_APQ5', 'MDVP_APQ', 'Shimmer_DDA', 'NHR', 'HNR', 'RPDE', 'DFA', 'spread1', 'spread2', 'D2', 'PPE']
+target_column = ['status']
 
 # Function to impute missing values with mean
 def mean_impute(column):
     return column.fillna(column.mean())
 
-# Imputing missing values for continuous columns
-for column in continuous_columns:
-    data[column] = mean_impute(data[column]).round(2)
+# Imputing missing values for all numeric columns
+numeric_columns = feature_columns + target_column
+for column in numeric_columns:
+    if data[column].dtype in ['int64', 'float64']:
+        data[column] = mean_impute(data[column])
 
 # Function to discretize a vector
 def get_discretized_vector(X):
@@ -37,26 +47,24 @@ for i in range(1, 6):  # Creating 5 train sets
     else:
         train_data, _ = train_test_split(data, test_size=0.2, random_state=i)
 
-    # Saving the train set for continuous data with specified columns only
-    train_data[identifier_columns + continuous_columns].to_csv(f'data/continuous/parkinson_data-MRI-features-train{i}.csv', index=False)
+    # Saving the train set for continuous data
+    train_data[identifier_columns + feature_columns + target_column].to_csv(f'data/continuous/parkinson_data-VOICE-features-train{i}.csv', index=False)
 
-    # Discretizing each continuous column and adding to train data
-    for column in continuous_columns:
+    # Discretizing each feature column and adding to train data
+    for column in feature_columns + target_column:
         train_data[f'{column}_discretized'] = get_discretized_vector(train_data[column])
 
-    # Saving the train set for discretized data with specified columns only
-    train_data[identifier_columns + [f'{col}_discretized' for col in continuous_columns]].to_csv(f'data/discrete/parkinson_data-MRI-features-train{i}.csv', index=False)
+    # Saving the train set for discretized data
+    train_data[identifier_columns + [f'{col}_discretized' for col in feature_columns + target_column]].to_csv(f'data/discrete/parkinson_data-VOICE-features-train{i}.csv', index=False)
 
 # Discretizing the test set
-for column in continuous_columns:
+for column in feature_columns + target_column:
     test_data[f'{column}_discretized'] = get_discretized_vector(test_data[column])
 
-# Saving the test set for continuous data with specified columns only
-test_data[identifier_columns + continuous_columns].to_csv('data/continuous/parkinson_data-MRI-features-test.csv', index=False)
+# Saving the test set for continuous data
+test_data[identifier_columns + feature_columns + target_column].to_csv('data/continuous/parkinson_data-VOICE-features-test.csv', index=False)
 
-# Saving the test set for discretized data with specified columns only
-test_data[identifier_columns + [f'{col}_discretized' for col in continuous_columns]].to_csv('data/discrete/parkinson_data-MRI-features-test.csv', index=False)
+# Saving the test set for discretized data
+test_data[identifier_columns + [f'{col}_discretized' for col in feature_columns + target_column]].to_csv('data/discrete/parkinson_data-VOICE-features-test.csv', index=False)
 
-print("Data has been successfully processed and missing values have been imputed.")
-
-
+print("Data has been successfully processed and saved with renamed columns.")
