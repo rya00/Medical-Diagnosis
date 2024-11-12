@@ -61,6 +61,8 @@ class CPT_Generator(BayesNetReader):
         for pd, counts in self.countings.items():
             print(str(pd))
             tokens = pd.split("|")
+            print(f"tokens={tokens}")
+
             variable = tokens[0].replace("P(", "").replace('\ufeff', '')
             cpt = {}
 

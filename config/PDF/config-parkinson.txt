@@ -1,0 +1,7 @@
+name: Parkinsons Structure
+
+random_variables:status(status);MDVP_Fo_Hz(MDVP_Fo_Hz);MDVP_Fhi_Hz(MDVP_Fhi_Hz);MDVP_Flo_Hz(MDVP_Flo_Hz);MDVP_Jitter_%(MDVP_Jitter_%);MDVP_Jitter_Abs(MDVP_Jitter_Abs);MDVP_RAP(MDVP_RAP);MDVP_PPQ(MDVP_PPQ);Jitter_DDP(Jitter_DDP);MDVP_Shimmer(MDVP_Shimmer);MDVP_Shimmer_dB(MDVP_Shimmer_dB);Shimmer_APQ3(Shimmer_APQ3);Shimmer_APQ5(Shimmer_APQ5);MDVP_APQ(MDVP_APQ);Shimmer_DDA(Shimmer_DDA);NHR(NHR);HNR(HNR);RPDE(RPDE);DFA(DFA);spread1(spread1);spread2(spread2);D2(D2);PPE(PPE)
+
+structure:P(MDVP_Fo_Hz|status);P(MDVP_Fhi_Hz|status);P(MDVP_Flo_Hz|status);P(MDVP_Jitter_%|status);P(MDVP_Jitter_Abs|status);P(MDVP_RAP|status);P(MDVP_PPQ|status);P(Jitter_DDP|status);P(MDVP_Shimmer|status);P(MDVP_Shimmer_dB|status);P(Shimmer_APQ3|status);P(Shimmer_APQ5|status);P(MDVP_APQ|status);P(Shimmer_DDA|status);P(NHR|status);P(HNR|status);P(RPDE|status);P(DFA|status);P(spread1|status);P(spread2|status);P(D2|status);P(PPE|status)
+
+regression_models:.\config\PDF\config-parkinson.pkl

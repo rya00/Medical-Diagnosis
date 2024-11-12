@@ -4,7 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # Set Training Data, Network Structure, And Type Of Conditional Independence Test
-TRAINING_DATA = 'data\continuous\parkinsons_voice_features_train1.csv'
+TRAINING_DATA = 'data/continuous/parkinson_data-VOICE-features-train1.csv'
 CONDITIONAL_INDEPENDENCE_TEST = 'cressie_read'
 
 # Data Loading Using Pandas
@@ -12,7 +12,7 @@ data = pd.read_csv(TRAINING_DATA, encoding='UTF-8')
 print("DATA:\n", data)
 
 # Definition Of Directed Acyclic Graphs (Predefined Structures)
-edges = [('status', 'name'), ('status', 'MDVP_Fo_Hz'), ('status', 'MDVP_Fhi_Hz'), ('status', 'MDVP_Flo_Hz'), ('status', 'MDVP_Jitter_%'), ('status', 'MDVP_Jitter_Abs'), ('status', 'MDVP_RAP'), ('status', 'MDVP_PPQ'), ('status', 'Jitter_DDP'), ('status', 'MDVP_Shimmer'), ('status', 'MDVP_Shimmer_dB'), ('status', 'Shimmer_APQ3'), ('status', 'Shimmer_APQ5'), ('status', 'MDVP_APQ'), ('status', 'Shimmer_DDA'), ('status', 'NHR'), ('status', 'HNR'), ('status', 'RPDE'), ('status', 'DFA'), ('status', 'spread1'), ('status', 'spread2'), ('status', 'D2'), ('status', 'PPE')]
+edges = [('status', 'MDVP_Fo_Hz'), ('status', 'MDVP_Fhi_Hz'), ('status', 'MDVP_Flo_Hz'), ('status', 'MDVP_Jitter_%'), ('status', 'MDVP_Jitter_Abs'), ('status', 'MDVP_RAP'), ('status', 'MDVP_PPQ'), ('status', 'Jitter_DDP'), ('status', 'MDVP_Shimmer'), ('status', 'MDVP_Shimmer_dB'), ('status', 'Shimmer_APQ3'), ('status', 'Shimmer_APQ5'), ('status', 'MDVP_APQ'), ('status', 'Shimmer_DDA'), ('status', 'NHR'), ('status', 'HNR'), ('status', 'RPDE'), ('status', 'DFA'), ('status', 'spread1'), ('status', 'spread2'), ('status', 'D2'), ('status', 'PPE')]
 
 # Creation Of Directed Acyclic Graph (DAG)
 DAG = bn.make_DAG(edges)

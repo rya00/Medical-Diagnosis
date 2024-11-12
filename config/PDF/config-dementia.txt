@@ -1,0 +1,7 @@
+name:Dementia
+
+random_variables:CDR(CDR);Group(Group);Visit(Visit);MR_Delay(MR_Delay);M/F(M/F);Age(Age);EDUC(EDUC);SES(SES);MMSE(MMSE);eTIV(eTIV);nWBV(nWBV);ASF(ASF)
+
+structure:P(Group);P(CDR|Group);P(Visit|Group);P(MR_Delay|Group);P(M/F|Group);P(Age|Group);P(EDUC|Group);P(SES|Group);P(MMSE|Group);P(eTIV|Group);P(nWBV|Group);P(ASF|Group)
+
+regression_models:.\config\PDF\config-dementia.pkl

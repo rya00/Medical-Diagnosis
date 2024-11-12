@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import os
 
 # Loading the Parkinson's dataset
-data = pd.read_excel("data\parkinsons_data-VOICE-features.xlsx")
+data = pd.read_excel("data/parkinsons_data-VOICE-features.xlsx")
 
 # Function to rename columns
 def rename_columns(df):
@@ -18,15 +18,25 @@ identifier_columns = ['name']
 feature_columns = ['MDVP_Fo_Hz', 'MDVP_Fhi_Hz', 'MDVP_Flo_Hz', 'MDVP_Jitter_%', 'MDVP_Jitter_Abs', 'MDVP_RAP', 'MDVP_PPQ', 'Jitter_DDP', 'MDVP_Shimmer', 'MDVP_Shimmer_dB', 'Shimmer_APQ3', 'Shimmer_APQ5', 'MDVP_APQ', 'Shimmer_DDA', 'NHR', 'HNR', 'RPDE', 'DFA', 'spread1', 'spread2', 'D2', 'PPE']
 target_column = ['status']
 
-# Function to impute missing values with mean
-def mean_impute(column):
-    return column.fillna(column.mean())
-
-# Imputing missing values for all numeric columns
-numeric_columns = feature_columns + target_column
-for column in numeric_columns:
-    if data[column].dtype in ['int64', 'float64']:
-        data[column] = mean_impute(data[column])
+# Function to round values
+def round_values(df):
+    df['MDVP_Fo_Hz'] = df['MDVP_Fo_Hz'].round(3)
+    df['MDVP_Fhi_Hz'] = df['MDVP_Fhi_Hz'].round(3)
+    df['MDVP_Flo_Hz'] = df['MDVP_Flo_Hz'].round(3)
+    df['MDVP_Jitter_%'] = df['MDVP_Jitter_%'].round(5)
+    df['MDVP_Jitter_Abs'] = df['MDVP_Jitter_Abs'].apply(lambda x: '{:.8f}'.format(x))
+    df['MDVP_RAP'] = df['MDVP_RAP'].round(5)
+    df['MDVP_PPQ'] = df['MDVP_PPQ'].round(5)
+    df['Jitter_DDP'] = df['Jitter_DDP'].round(5)
+    df['MDVP_Shimmer'] = df['MDVP_Shimmer'].round(5)
+    df['MDVP_Shimmer_dB'] = df['MDVP_Shimmer_dB'].round(3)
+    df['Shimmer_APQ3'] = df['Shimmer_APQ3'].round(5)
+    df['Shimmer_APQ5'] = df['Shimmer_APQ5'].round(5)
+    df['MDVP_APQ'] = df['MDVP_APQ'].round(5)
+    df['Shimmer_DDA'] = df['Shimmer_DDA'].round(5)
+    df['NHR'] = df['NHR'].round(5)
+    df['HNR'] = df['HNR'].round(3)
+    return df
 
 # Function to discretize a vector
 def get_discretized_vector(X):
@@ -47,24 +57,32 @@ for i in range(1, 6):  # Creating 5 train sets
     else:
         train_data, _ = train_test_split(data, test_size=0.2, random_state=i)
 
+    # Rounding the values in train data
+    train_continuous = round_values(train_data[feature_columns + target_column].copy())
+
     # Saving the train set for continuous data
-    train_data[identifier_columns + feature_columns + target_column].to_csv(f'data/continuous/parkinson_data-VOICE-features-train{i}.csv', index=False)
+    pd.concat([train_data[identifier_columns], train_continuous], axis=1).to_csv(f'data/continuous/parkinson_data-VOICE-features-train{i}.csv', index=False)
 
     # Discretizing each feature column and adding to train data
+    train_discrete = train_data[feature_columns + target_column].copy()
     for column in feature_columns + target_column:
-        train_data[f'{column}_discretized'] = get_discretized_vector(train_data[column])
+        train_discrete[column] = get_discretized_vector(train_discrete[column])
 
     # Saving the train set for discretized data
-    train_data[identifier_columns + [f'{col}_discretized' for col in feature_columns + target_column]].to_csv(f'data/discrete/parkinson_data-VOICE-features-train{i}.csv', index=False)
+    pd.concat([train_data[identifier_columns], train_discrete], axis=1).to_csv(f'data/discrete/parkinson_data-VOICE-features-train{i}.csv', index=False)
 
-# Discretizing the test set
-for column in feature_columns + target_column:
-    test_data[f'{column}_discretized'] = get_discretized_vector(test_data[column])
+# Rounding the values in test data
+test_continuous = round_values(test_data[feature_columns + target_column].copy())
 
 # Saving the test set for continuous data
-test_data[identifier_columns + feature_columns + target_column].to_csv('data/continuous/parkinson_data-VOICE-features-test.csv', index=False)
+pd.concat([test_data[identifier_columns], test_continuous], axis=1).to_csv('data/continuous/parkinson_data-VOICE-features-test.csv', index=False)
+
+# Discretizing the test set
+test_discrete = test_data[feature_columns + target_column].copy()
+for column in feature_columns + target_column:
+    test_discrete[column] = get_discretized_vector(test_discrete[column])
 
 # Saving the test set for discretized data
-test_data[identifier_columns + [f'{col}_discretized' for col in feature_columns + target_column]].to_csv('data/discrete/parkinson_data-VOICE-features-test.csv', index=False)
+pd.concat([test_data[identifier_columns], test_discrete], axis=1).to_csv('data/discrete/parkinson_data-VOICE-features-test.csv', index=False)
 
-print("Data has been successfully processed and saved with renamed columns.")
+print("Data has been successfully processed, rounded, and discretized.")

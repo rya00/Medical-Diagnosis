@@ -1,4 +1,4 @@
-name,MDVP_Fo_Hz_discretized,MDVP_Fhi_Hz_discretized,MDVP_Flo_Hz_discretized,MDVP_Jitter_%_discretized,MDVP_Jitter_Abs_discretized,MDVP_RAP_discretized,MDVP_PPQ_discretized,Jitter_DDP_discretized,MDVP_Shimmer_discretized,MDVP_Shimmer_dB_discretized,Shimmer_APQ3_discretized,Shimmer_APQ5_discretized,MDVP_APQ_discretized,Shimmer_DDA_discretized,NHR_discretized,HNR_discretized,RPDE_discretized,DFA_discretized,spread1_discretized,spread2_discretized,D2_discretized,PPE_discretized,status_discretized
+name,MDVP_Fo_Hz,MDVP_Fhi_Hz,MDVP_Flo_Hz,MDVP_Jitter_%,MDVP_Jitter_Abs,MDVP_RAP,MDVP_PPQ,Jitter_DDP,MDVP_Shimmer,MDVP_Shimmer_dB,Shimmer_APQ3,Shimmer_APQ5,MDVP_APQ,Shimmer_DDA,NHR,HNR,RPDE,DFA,spread1,spread2,D2,PPE,status
 phon_R01_S31_2,3,2,2,3,3,3,3,3,2,2,2,2,2,2,2,2,3,3,3,2,2,3,3
 phon_R01_S39_2,1,2,2,2,3,2,2,2,3,3,2,3,3,2,2,2,4,2,3,3,2,3,3
 phon_R01_S22_4,3,2,1,2,2,2,2,2,3,3,3,3,3,3,2,3,3,2,2,2,2,2,3

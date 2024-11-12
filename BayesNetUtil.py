@@ -34,37 +34,40 @@ def get_parents(child, bn):
     print("ERROR: Couldn't find parent(s) of variable "+str(child))
     exit(0)
 
-#Returns Probability of Tuple V=v (Where V Is Random Variable And v Is Domain Value) Given Evidence & Bayes Net (bn) Provided
 def get_probability_given_parents(V, v, evidence, bn):
     parents = get_parents(V, bn)
-    is_gaussian = True if "regression_models" in bn else False
+    is_gaussian = "regression_models" in bn
     probability = 0
 
-    if parents is None and is_gaussian == False:
+    if parents is None and not is_gaussian:
         cpt = bn["CPT("+V+")"]
-        probability = cpt[v]
+        probability = cpt.get(v, 0)  # Default to 0 if not found
 
-    elif parents is not None and is_gaussian == False:
+    elif parents is not None and not is_gaussian:
         cpt = bn["CPT("+V+"|"+parents+")"]
         values = v
+        
+        # Constructing the values string
         for parent in parents.split(","):
             separator = "|" if values == v else ","
-            values = values + separator + evidence[parent]
-        probability = cpt[values]
+            values += separator + evidence[parent].strip(') ')  # Strip unwanted characters
+        
+        # Try to find an exact match first
+        probability = cpt.get(values, 0)  # Default to 0 if not found
 
-    elif parents is None and is_gaussian == True:
+        if probability == 0:  # If no exact match, try finding the closest match
+            closest_key = find_closest_key(values, cpt.keys())
+            probability = cpt.get(closest_key, 0)  # Default to 0 if closest key is also not found
+
+    elif parents is None and is_gaussian:
         mean = bn["means"][V]
         std = bn["stdevs"][V]
         probability = get_gaussian_density(float(v), mean, std)
 
-    elif parents is not None and is_gaussian == True:
-        values = []
-        parent_list = parents.split(",")
-        for i in range(0, len(parent_list)):
-            values.append(float(evidence[parent_list[i]]))
-        values = np.asarray([values])
+    elif parents is not None and is_gaussian:
+        values = [float(evidence[parent]) for parent in parents.split(",")]
         regressor = bn["regressors"][V]
-        pred_mean = regressor.predict(values)
+        pred_mean = regressor.predict(np.array([values]))
         std = bn["stdevs"][V]
         probability = get_gaussian_density(float(v), pred_mean, std)
 
@@ -73,6 +76,25 @@ def get_probability_given_parents(V, v, evidence, bn):
         exit(0)
 
     return probability
+
+def find_closest_key(target, keys):
+    def parse_values(value_string):
+        return [float(x) for x in value_string.replace(',', '|').split('|') if x]
+
+    target_values = parse_values(target)
+    min_diff = float('inf')
+    closest_key = None
+
+    for key in keys:
+        key_values = parse_values(key)
+        if len(key_values) != len(target_values):
+            continue  # Skip keys with different number of values
+        diff = sum(abs(t - k) for t, k in zip(target_values, key_values))
+        if diff < min_diff:
+            min_diff = diff
+            closest_key = key
+
+    return closest_key
 
 #Returns Domain Values Of Random Variable 'V' Given Bayes Net 'bn'
 def get_domain_values(V, bn):

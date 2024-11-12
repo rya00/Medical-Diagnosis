@@ -4,7 +4,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # Set Training Data, Network Structure, And Type Of Conditional Independence Test
-TRAINING_DATA = 'data\continuous\dementia_data-MRI-features-train1.csv'
+TRAINING_DATA = 'data/continuous/dementia_data-MRI-features-train1.csv'
 CONDITIONAL_INDEPENDENCE_TEST = 'cressie_read'
 
 # Data Loading Using Pandas
@@ -12,7 +12,17 @@ data = pd.read_csv(TRAINING_DATA, encoding='UTF-8')
 print("DATA:\n", data)
 
 # Definition Of Directed Acyclic Graphs (Predefined Structures)
-edges = [('Group', 'Subject_ID'),('Group', 'MRI_ID'),('Group', 'CDR'),('Group', 'Visit'),('Group', 'MR_Delay'),('Group', 'M_F'),('Group', 'Hand'),('Group', 'Age'),('Group', 'EDUC'),('Group', 'SES'),('Group', 'MMSE'),('Group', 'eTIV'),('Group', 'nWBV'),('Group', 'ASF')]
+edges = [
+    ('Age', 'eTIV'),          # eTIV depends on Age
+    ('eTIV', 'ASF'),          # ASF depends on eTIV
+    ('eTIV', 'nWBV'),         # nWBV depends on eTIV
+    ('Age', 'MMSE'),          # MMSE depends on Age
+    ('EDUC', 'MMSE'),         # MMSE also depends on EDUC
+    ('MMSE', 'CDR'),          # CDR depends on MMSE
+    ('nWBV', 'Group'),        # Group classification may depend on nWBV
+    ('MMSE', 'Group'),        # Group classification may also depend on MMSE
+    ('CDR', 'Group')          # Group classification may also depend on CDR
+]
 
 # Creation Of Directed Acyclic Graph (DAG)
 DAG = bn.make_DAG(edges)

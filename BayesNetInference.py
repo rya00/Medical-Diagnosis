@@ -17,10 +17,10 @@ class BayesNetInference(BayesNetReader):
             return
 
         self.query = bnu.tokenise_query(prob_query, self.verbose)
+        self.preprocess_query()  # Add this line to preprocess the query
 
         start = time.time()
         if alg_name == 'InferenceByEnumeration':
-            self.prob_dist = self.enumeration_ask()
             self.prob_dist = self.enumeration_ask()
             normalised_dist = bnu.normalise(self.prob_dist)
             print("unnormalised P(%s)=%s" % (self.query["query_var"], self.prob_dist))
@@ -36,6 +36,25 @@ class BayesNetInference(BayesNetReader):
 
         end = time.time()
         print('Execution Time: {}'.format(end-start))
+
+    def preprocess_query(self):
+    # Check if the query is for Parkinson's dataset
+        if "MDVP" in self.query['query_var']:  # This checks if it's a Parkinson's query
+            for key, value in self.query['evidence'].items():
+                value = value.strip(') ')  # Remove trailing parenthesis and spaces
+                try:
+                    if key == 'MDVP_Jitter_Abs':
+                        self.query['evidence'][key] = '{:.8f}'.format(float(value))
+                    elif key in ['MDVP_Fo_Hz', 'MDVP_Fhi_Hz', 'MDVP_Flo_Hz', 'MDVP_Shimmer_dB', 'HNR']:
+                        self.query['evidence'][key] = '{:.3f}'.format(float(value))
+                    else:
+                        self.query['evidence'][key] = '{:.5f}'.format(float(value))
+                except ValueError as e:
+                    print(f"Error converting value for {key}: {value}")
+                    raise e  # Re-raise the error after logging it
+        else:
+            # For dementia queries, do nothing or apply different logic if needed
+            print("No preprocessing applied for dementia queries.")
 
     #Method For Inference By Enumeration, Which Invokes Enumerate_All() For Each Domain Value Of Query Variable
     def enumeration_ask(self):

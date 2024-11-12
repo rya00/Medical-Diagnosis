@@ -2,12 +2,22 @@ import bnlearn as bn
 import pandas as pd
 
 # definition of directed acyclic graphs (predefined structures)
-edges = [('Group', 'Subject_ID'),('Group', 'MRI_ID'),('Group', 'CDR'),('Group', 'Visit'),('Group', 'MR_Delay'),('Group', 'M_F'),('Group', 'Hand'),('Group', 'Age'),('Group', 'EDUC'),('Group', 'SES'),('Group', 'MMSE'),('Group', 'eTIV'),('Group', 'nWBV'),('Group', 'ASF')]
+edges = [
+    ('Age', 'eTIV'),          # eTIV depends on Age
+    ('eTIV', 'ASF'),          # ASF depends on eTIV
+    ('eTIV', 'nWBV'),         # nWBV depends on eTIV
+    ('Age', 'MMSE'),          # MMSE depends on Age
+    ('EDUC', 'MMSE'),         # MMSE also depends on EDUC
+    ('MMSE', 'CDR'),          # CDR depends on MMSE
+    ('nWBV', 'Group'),        # Group classification may depend on nWBV
+    ('MMSE', 'Group'),        # Group classification may also depend on MMSE
+    ('CDR', 'Group')          # Group classification may also depend on CDR
+]
 
 # examples of training data include 'data\lung_cancer-train.csv' or  'data\lang_detect_train.csv', etc.
 # examples of net structure (as below): edges_langdet1, edges_langdet2, edges, edges_lungcancer2
 # choices of CI test: chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
-TRAINING_DATA = 'data\continuous\dementia_data-MRI-features-train1.csv'
+TRAINING_DATA = 'data/continuous/dementia_data-MRI-features-train1.csv'
 NETWORK_STRUCTURE = edges 
 CONDITIONAL_INDEPENDENCE_TEST = 'cressie_read'
 
@@ -20,7 +30,7 @@ DAG = bn.make_DAG(NETWORK_STRUCTURE)
 print("DAG:\n", DAG)
 
 # parameter learning using Maximum Likelihood Estimation
-model = bn.parameter_learning.fit(DAG, data, methodtype="maximumlikelihood")
+model = bn.parameter_learning.fit(DAG, data, methodtype="hard-em")
 print("model=",model)
 
 # statististical test of independence
